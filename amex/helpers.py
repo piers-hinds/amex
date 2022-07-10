@@ -41,3 +41,16 @@ def process_amex_data(df):
     df = cudf.concat([time_delta, num_agg, cat_agg], axis=1)
     del num_agg, cat_agg, time_delta
     return df
+
+
+def read_amex_targets(path):
+    targets = cudf.read_csv(path)
+    targets['customer_ID'] = targets['customer_ID'].str[-16:].str.hex_to_int().astype('int64')
+    targets = targets.set_index('customer_ID')
+    return targets
+
+
+def merge_targets(df, targets):
+    df = df.merge(targets, left_index=True, right_index=True, how='left')
+    df.target = df.target.astype('int8')
+    return df
