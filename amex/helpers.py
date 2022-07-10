@@ -53,4 +53,5 @@ def read_amex_targets(path):
 def merge_targets(df, targets):
     df = df.merge(targets, left_index=True, right_index=True, how='left')
     df.target = df.target.astype('int8')
+    df = df.sort_index().reset_index()
     return df
