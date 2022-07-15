@@ -26,6 +26,8 @@ def amex_metric(y_true: pd.DataFrame, y_pred: pd.DataFrame) -> float:
         y_true_pred = y_true.rename(columns={'target': 'prediction'})
         return weighted_gini(y_true, y_pred) / weighted_gini(y_true, y_true_pred)
 
+    y_true = pd.DataFrame({'target': y_true})
+    y_pred = pd.DataFrame({'target': y_pred})
     g = normalized_weighted_gini(y_true, y_pred)
     d = top_four_percent_captured(y_true, y_pred)
 
