@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from sklearn.linear_model import LogisticRegression
+import numpy as np
 
 
 class Model(ABC):
