@@ -6,6 +6,6 @@ setup(
     author='Piers Hinds',
     author_email='pmxph7@nottingham.ac.uk',
     packages=['amex'],
-    install_requires=['numpy'],
+    install_requires=['numpy', 'pandas'],
     version=0.1,
 )
