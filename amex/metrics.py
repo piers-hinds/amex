@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def amex_metric(y_true: pd.DataFrame, y_pred: pd.DataFrame) -> float:
@@ -33,3 +34,23 @@ def amex_metric(y_true: pd.DataFrame, y_pred: pd.DataFrame) -> float:
 
     return 0.5 * (g + d)
 
+
+def amex_metric_np(preds: np.ndarray, target: np.ndarray) -> float:
+    n_pos = np.sum(target)
+    n_neg = target.shape[0] - n_pos
+
+    indices = np.argsort(preds)[::-1]
+    preds, target = preds[indices], target[indices]
+
+    weight = 20.0 - target * 19.0
+    cum_norm_weight = (weight * (1 / weight.sum())).cumsum()
+    four_pct_mask = cum_norm_weight <= 0.04
+    d = np.sum(target[four_pct_mask]) / n_pos
+
+    lorentz = (target * (1 / n_pos)).cumsum()
+    gini = ((lorentz - cum_norm_weight) * weight).sum()
+
+    gini_max = 10 * n_neg * (1 - 19 / (n_pos + 20 * n_neg))
+
+    g = gini / gini_max
+    return 0.5 * (g + d)
